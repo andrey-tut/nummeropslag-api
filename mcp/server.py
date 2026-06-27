@@ -16,7 +16,7 @@ Add to Claude Desktop (claude_desktop_config.json) or Claude Code (.mcp.json):
       "mcpServers": {
         "nummeropslag": {
           "command": "python",
-          "args": ["/absolute/path/to/nummeropslag-api/mcp/server.py"],
+          "args": ["/absolute/path/to/mcp/server.py"],
           "env": { "NUMMEROPSLAG_API_KEY": "npk_xxx" }
         }
       }
@@ -53,7 +53,7 @@ mcp = FastMCP("nummeropslag")
 def _get(path: str, params: dict | None = None) -> dict:
     if not KEY:
         return {"error": "missing_key",
-                "message": "Set NUMMEROPSLAG_API_KEY (mint one in /admin/api)."}
+                "message": "Set NUMMEROPSLAG_API_KEY (get one at https://nummeropslag.dk/api-noegle)."}
     try:
         # X-Client: mcp → сервер рахує проти ОКРЕМОЇ (меншої) MCP-квоти, не проти REST-API-квоти.
         r = httpx.get(BASE + path, params=params or {},
