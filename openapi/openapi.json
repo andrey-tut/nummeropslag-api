@@ -1,0 +1,1339 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Nummeropslag Partner API",
+    "version": "0.4.9",
+    "description": "Public Partner API for Danish phone-number lookup, caller-ID and spam/trust signals.\n\nAll data endpoints require an API key sent in the `X-API-Key` header. Get a key at https://nummeropslag.dk/api-noegle — each key has a plan, scopes (lookup / spam / operator) and a request quota.\n\nData core: official CVR (companies + production units) and the Danish number plan (SDFI, CC0). Privacy: names of private individuals are never exposed; contacts are never uploaded (GDPR)."
+  },
+  "paths": {
+    "/api/v1/partner/lookup/{e164}": {
+      "get": {
+        "tags": [
+          "partner-api"
+        ],
+        "summary": "Full lookup: company (CVR), operator, spam/trust, comments",
+        "description": "Full record for a Danish number: registered company (CVR), telecom operator,\nspam/trust rating and recent anonymous comments.",
+        "operationId": "partner_lookup_api_v1_partner_lookup__e164__get",
+        "parameters": [
+          {
+            "name": "e164",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "E164"
+            }
+          },
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NumberOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/partner/spam/{e164}": {
+      "get": {
+        "tags": [
+          "partner-api"
+        ],
+        "summary": "Compact spam/trust verdict only",
+        "description": "Lightweight spam/trust verdict — ideal for caller-ID / call-blocking.\nDB-only (live=False) → швидко: спам-вердикт із краудсорсу+БД, без блокуючого live-CVR.",
+        "operationId": "partner_spam_api_v1_partner_spam__e164__get",
+        "parameters": [
+          {
+            "name": "e164",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "E164"
+            }
+          },
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/partner/operator/{e164}": {
+      "get": {
+        "tags": [
+          "partner-api"
+        ],
+        "summary": "Compact operator + number type",
+        "description": "Telecom operator and number type from the Danish number plan (no CVR/Google).",
+        "operationId": "partner_operator_api_v1_partner_operator__e164__get",
+        "parameters": [
+          {
+            "name": "e164",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "E164"
+            }
+          },
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/partner/search": {
+      "get": {
+        "tags": [
+          "partner-api"
+        ],
+        "summary": "Search businesses by name (CVR)",
+        "description": "Search Danish companies by name (from CVR). Returns matching businesses.",
+        "operationId": "partner_search_api_v1_partner_search_get",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 80,
+              "title": "Q"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 50,
+              "minimum": 1,
+              "default": 20,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "e164",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "E164"
+            }
+          },
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/partner/me": {
+      "get": {
+        "tags": [
+          "partner-api"
+        ],
+        "summary": "Your API key status (plan, scopes, separate API + MCP quota/usage)",
+        "operationId": "partner_me_api_v1_partner_me_get",
+        "parameters": [
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/healthz": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Healthz",
+        "operationId": "healthz_healthz_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ClaimIn": {
+        "properties": {
+          "e164": {
+            "type": "string",
+            "title": "E164"
+          },
+          "cvr": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 20
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cvr"
+          },
+          "display_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Display Name"
+          },
+          "reason_for_call": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason For Call"
+          },
+          "method": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 16
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Method"
+          }
+        },
+        "type": "object",
+        "required": [
+          "e164"
+        ],
+        "title": "ClaimIn"
+      },
+      "ClaimOut": {
+        "properties": {
+          "display_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Display Name"
+          },
+          "reason_for_call": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason For Call"
+          },
+          "verified": {
+            "type": "boolean",
+            "title": "Verified",
+            "default": false
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url"
+          }
+        },
+        "type": "object",
+        "title": "ClaimOut"
+      },
+      "CommentOut": {
+        "properties": {
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "comment": {
+            "type": "string",
+            "title": "Comment"
+          },
+          "date": {
+            "type": "string",
+            "title": "Date",
+            "default": ""
+          },
+          "source": {
+            "type": "string",
+            "title": "Source",
+            "default": "web"
+          }
+        },
+        "type": "object",
+        "required": [
+          "category",
+          "comment"
+        ],
+        "title": "CommentOut"
+      },
+      "CompanyOut": {
+        "properties": {
+          "cvr": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Cvr"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          },
+          "phones": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Phones",
+            "default": []
+          },
+          "city": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "City"
+          },
+          "zipcode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Zipcode"
+          },
+          "industry": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Industry"
+          },
+          "kind": {
+            "type": "string",
+            "title": "Kind",
+            "default": "company"
+          },
+          "parent_cvr": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parent Cvr"
+          }
+        },
+        "type": "object",
+        "required": [
+          "cvr"
+        ],
+        "title": "CompanyOut"
+      },
+      "FirmOut": {
+        "properties": {
+          "cvr": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cvr"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "city": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "City"
+          },
+          "industry": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Industry"
+          },
+          "units": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Units",
+            "default": []
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          },
+          "closed": {
+            "type": "boolean",
+            "title": "Closed",
+            "default": false
+          }
+        },
+        "type": "object",
+        "title": "FirmOut",
+        "description": "Унікальна фірма (CVR) + її відділення (P-enheder). P-enhed = офіс/філія, не окрема фірма."
+      },
+      "GoogleOut": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "rating": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rating"
+          },
+          "reviews": {
+            "type": "integer",
+            "title": "Reviews",
+            "default": 0
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count",
+            "default": 0
+          },
+          "address": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Address"
+          },
+          "website": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Website"
+          },
+          "maps_uri": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Maps Uri"
+          },
+          "maps_search": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Maps Search"
+          },
+          "places": {
+            "items": {
+              "$ref": "#/components/schemas/GooglePlaceOut"
+            },
+            "type": "array",
+            "title": "Places",
+            "default": []
+          }
+        },
+        "type": "object",
+        "title": "GoogleOut",
+        "description": "Верифіковані бізнеси Google за номером (може бути кілька). Атрибуція Google обовʼязкова в UI."
+      },
+      "GooglePlaceOut": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "rating": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rating"
+          },
+          "reviews": {
+            "type": "integer",
+            "title": "Reviews",
+            "default": 0
+          },
+          "address": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Address"
+          },
+          "maps_uri": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Maps Uri"
+          },
+          "website": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Website"
+          },
+          "closed": {
+            "type": "boolean",
+            "title": "Closed",
+            "default": false
+          }
+        },
+        "type": "object",
+        "title": "GooglePlaceOut"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "LabelOut": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "tone": {
+            "type": "string",
+            "title": "Tone",
+            "default": "neutral"
+          }
+        },
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "title": "LabelOut"
+      },
+      "NumberOut": {
+        "properties": {
+          "e164": {
+            "type": "string",
+            "title": "E164"
+          },
+          "national": {
+            "type": "string",
+            "title": "National"
+          },
+          "type": {
+            "type": "string",
+            "title": "Type",
+            "default": "unknown"
+          },
+          "operator": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OperatorOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "companies": {
+            "items": {
+              "$ref": "#/components/schemas/CompanyOut"
+            },
+            "type": "array",
+            "title": "Companies",
+            "default": []
+          },
+          "companies_total": {
+            "type": "integer",
+            "title": "Companies Total",
+            "default": 0
+          },
+          "firms": {
+            "items": {
+              "$ref": "#/components/schemas/FirmOut"
+            },
+            "type": "array",
+            "title": "Firms",
+            "default": []
+          },
+          "firms_total": {
+            "type": "integer",
+            "title": "Firms Total",
+            "default": 0
+          },
+          "needs_live": {
+            "type": "boolean",
+            "title": "Needs Live",
+            "default": false
+          },
+          "placeholder": {
+            "type": "boolean",
+            "title": "Placeholder",
+            "default": false
+          },
+          "placeholder_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Placeholder Reason"
+          },
+          "spam": {
+            "$ref": "#/components/schemas/SpamOut",
+            "default": {
+              "score": 0,
+              "level": "unknown",
+              "reports": 0,
+              "contributors": 0,
+              "positive": 0,
+              "negative": 0,
+              "categories": {},
+              "range_based": false,
+              "verdict": ""
+            }
+          },
+          "claimed": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ClaimOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "is_private": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Private"
+          },
+          "google": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GoogleOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "saved_by": {
+            "type": "integer",
+            "title": "Saved By",
+            "default": 0
+          },
+          "comments": {
+            "items": {
+              "$ref": "#/components/schemas/CommentOut"
+            },
+            "type": "array",
+            "title": "Comments",
+            "default": []
+          },
+          "labels": {
+            "items": {
+              "$ref": "#/components/schemas/LabelOut"
+            },
+            "type": "array",
+            "title": "Labels",
+            "default": []
+          },
+          "verdict": {
+            "type": "string",
+            "title": "Verdict",
+            "default": ""
+          },
+          "verdict_tone": {
+            "type": "string",
+            "title": "Verdict Tone",
+            "default": "neutral"
+          },
+          "trust": {
+            "type": "integer",
+            "title": "Trust",
+            "default": 50
+          },
+          "trust_label": {
+            "type": "string",
+            "title": "Trust Label",
+            "default": "Neutral"
+          },
+          "trust_zone": {
+            "type": "string",
+            "title": "Trust Zone",
+            "default": "neutral"
+          },
+          "verdict_key": {
+            "type": "string",
+            "title": "Verdict Key",
+            "default": "unknown"
+          },
+          "verdict_cat": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Verdict Cat"
+          },
+          "verdict_sub_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Verdict Sub Key"
+          },
+          "verdict_n": {
+            "type": "integer",
+            "title": "Verdict N",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "required": [
+          "e164",
+          "national"
+        ],
+        "title": "NumberOut"
+      },
+      "OperatorOut": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "cvr": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cvr"
+          },
+          "country": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Country"
+          },
+          "series": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Series"
+          }
+        },
+        "type": "object",
+        "title": "OperatorOut"
+      },
+      "ReportIn": {
+        "properties": {
+          "e164": {
+            "type": "string",
+            "title": "E164"
+          },
+          "category": {
+            "type": "string",
+            "maxLength": 20,
+            "minLength": 1,
+            "pattern": "^[a-z_]+$",
+            "title": "Category"
+          },
+          "comment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comment"
+          },
+          "device_type": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 24
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Device Type"
+          },
+          "anon_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Anon Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "e164",
+          "category"
+        ],
+        "title": "ReportIn"
+      },
+      "SignalIn": {
+        "properties": {
+          "e164": {
+            "type": "string",
+            "title": "E164"
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 24,
+            "minLength": 1,
+            "pattern": "^[a-z_]+$",
+            "title": "Kind"
+          },
+          "anon_id": {
+            "type": "string",
+            "maxLength": 64,
+            "title": "Anon Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "e164",
+          "kind",
+          "anon_id"
+        ],
+        "title": "SignalIn"
+      },
+      "SpamOut": {
+        "properties": {
+          "score": {
+            "type": "integer",
+            "title": "Score",
+            "default": 0
+          },
+          "level": {
+            "type": "string",
+            "title": "Level",
+            "default": "unknown"
+          },
+          "reports": {
+            "type": "integer",
+            "title": "Reports",
+            "default": 0
+          },
+          "contributors": {
+            "type": "integer",
+            "title": "Contributors",
+            "default": 0
+          },
+          "positive": {
+            "type": "integer",
+            "title": "Positive",
+            "default": 0
+          },
+          "negative": {
+            "type": "integer",
+            "title": "Negative",
+            "default": 0
+          },
+          "categories": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Categories",
+            "default": {}
+          },
+          "range_based": {
+            "type": "boolean",
+            "title": "Range Based",
+            "default": false
+          },
+          "verdict": {
+            "type": "string",
+            "title": "Verdict",
+            "default": ""
+          },
+          "verdict_sub": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Verdict Sub"
+          }
+        },
+        "type": "object",
+        "title": "SpamOut"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "VoteIn": {
+        "properties": {
+          "e164": {
+            "type": "string",
+            "title": "E164"
+          },
+          "value": {
+            "type": "integer",
+            "title": "Value"
+          },
+          "anon_id": {
+            "type": "string",
+            "title": "Anon Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "e164",
+          "value",
+          "anon_id"
+        ],
+        "title": "VoteIn"
+      }
+    },
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "https://nummeropslag.dk",
+      "description": "Production"
+    }
+  ]
+}
