@@ -15,7 +15,7 @@ Identify who is calling from a Danish number: company from the official **CVR** 
 reports. Powered by official open data — not scraping. Use it from any HTTP client, or plug the
 **[MCP server](#mcp-server-ai-agents-)** straight into Claude and other AI agents.
 
-> 🌐 Service: **[nummeropslag.dk](https://nummeropslag.dk)** · 🔑 Get a key: **[/api-noegle](https://nummeropslag.dk/api-noegle)** · 📘 Interactive docs: **[/docs](https://nummeropslag.dk/docs)** · 🤖 [MCP](#mcp-server-ai-agents-)
+> 🌐 Service: **[nummeropslag.dk](https://nummeropslag.dk)** · 🔑 Get a key: **[/api-noegle](https://nummeropslag.dk/api-noegle)** · 📖 API reference: **[Redoc](https://andrey-tut.github.io/nummeropslag-api/)** · 📘 Swagger: **[/docs](https://nummeropslag.dk/docs)** · 🤖 [MCP](#mcp-server-ai-agents-)
 >
 > This repository contains **only public API docs, the OpenAPI spec, client examples and the MCP server**. The backend source is private.
 
