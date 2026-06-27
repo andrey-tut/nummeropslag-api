@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # Nummeropslag Partner API — curl examples
 # All endpoints require an API key. Get one at https://nummeropslag.dk/api-noegle
-#   export NUMMEROPSLAG_API_KEY=pk_...
+#   export NUMMEROPSLAG_API_KEY=npk_...
 #   ./curl.sh 33633363
 set -euo pipefail
 
 BASE="https://nummeropslag.dk/api/v1"
-KEY="${NUMMEROPSLAG_API_KEY:?Set NUMMEROPSLAG_API_KEY=pk_...}"
+KEY="${NUMMEROPSLAG_API_KEY:?Set NUMMEROPSLAG_API_KEY=npk_...}"
 NUMBER="${1:-33633363}"
 
 echo "# Full lookup (scope: lookup)"

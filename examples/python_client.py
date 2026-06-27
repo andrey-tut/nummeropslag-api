@@ -1,7 +1,7 @@
 """Nummeropslag Partner API — minimal Python client (stdlib only).
 
 All endpoints require an API key. Get one at https://nummeropslag.dk/api-noegle
-    export NUMMEROPSLAG_API_KEY=pk_...
+    export NUMMEROPSLAG_API_KEY=npk_...
     python3 python_client.py 33633363
 """
 from __future__ import annotations
@@ -18,7 +18,7 @@ API_KEY = os.environ.get("NUMMEROPSLAG_API_KEY", "")
 
 def _get(path: str, params: dict | None = None) -> dict:
     if not API_KEY:
-        raise SystemExit("Set NUMMEROPSLAG_API_KEY=pk_... (https://nummeropslag.dk/api-noegle)")
+        raise SystemExit("Set NUMMEROPSLAG_API_KEY=npk_... (https://nummeropslag.dk/api-noegle)")
     url = f"{BASE}{path}"
     if params:
         url += "?" + urllib.parse.urlencode(params)

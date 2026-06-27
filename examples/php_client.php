@@ -1,13 +1,13 @@
 <?php
 // Nummeropslag Partner API — minimal PHP client (curl).
 // All endpoints require an API key. Get one at https://nummeropslag.dk/api-noegle
-//   NUMMEROPSLAG_API_KEY=pk_... php php_client.php 33633363
+//   NUMMEROPSLAG_API_KEY=npk_... php php_client.php 33633363
 
 const BASE = "https://nummeropslag.dk/api/v1";
 
 function api_get(string $path, array $params = []): array {
     $key = getenv("NUMMEROPSLAG_API_KEY") ?: "";
-    if ($key === "") { fwrite(STDERR, "Set NUMMEROPSLAG_API_KEY=pk_... (https://nummeropslag.dk/api-noegle)\n"); exit(1); }
+    if ($key === "") { fwrite(STDERR, "Set NUMMEROPSLAG_API_KEY=npk_... (https://nummeropslag.dk/api-noegle)\n"); exit(1); }
     $url = BASE . $path;
     if ($params) $url .= "?" . http_build_query($params);
     $ch = curl_init($url);

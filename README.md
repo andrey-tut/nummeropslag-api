@@ -5,17 +5,19 @@
 ![Auth](https://img.shields.io/badge/auth-API%20key-blue)
 ![Region](https://img.shields.io/badge/region-Denmark%20%F0%9F%87%A9%F0%9F%87%B0-C8102E)
 ![Examples](https://img.shields.io/badge/examples-curl%20%C2%B7%20python%20%C2%B7%20node%20%C2%B7%20php-lightgrey)
+![MCP](https://img.shields.io/badge/MCP-server-7C4DFF?logo=anthropic&logoColor=white)
 ![License](https://img.shields.io/badge/examples%20license-MIT-green)
 
-Public **Partner API** for Danish phone-number lookup, caller-ID and spam/trust signals.
+Public **Partner API** + **MCP server** for Danish phone-number lookup, caller-ID and spam/trust signals.
 
 Identify who is calling from a Danish number: company from the official **CVR** register,
 **telecom operator**, number type, and a **spam/trust verdict** based on anonymous user
-reports. Powered by official open data — not scraping.
+reports. Powered by official open data — not scraping. Use it from any HTTP client, or plug the
+**[MCP server](#mcp-server-ai-agents-)** straight into Claude and other AI agents.
 
-> 🌐 Service: **[nummeropslag.dk](https://nummeropslag.dk)** · 🔑 Get a key: **[/api-noegle](https://nummeropslag.dk/api-noegle)** · 📘 Interactive docs: **[/docs](https://nummeropslag.dk/docs)**
+> 🌐 Service: **[nummeropslag.dk](https://nummeropslag.dk)** · 🔑 Get a key: **[/api-noegle](https://nummeropslag.dk/api-noegle)** · 📘 Interactive docs: **[/docs](https://nummeropslag.dk/docs)** · 🤖 [MCP](#mcp-server-ai-agents-)
 >
-> This repository contains **only public API docs, the OpenAPI spec and client examples**. The backend source is private.
+> This repository contains **only public API docs, the OpenAPI spec, client examples and the MCP server**. The backend source is private.
 
 ---
 
@@ -24,7 +26,7 @@ reports. Powered by official open data — not scraping.
 All endpoints require an API key, sent in the `X-API-Key` header:
 
 ```http
-X-API-Key: pk_your_key_here
+X-API-Key: npk_your_key_here
 ```
 
 Each key has a **plan**, a set of **scopes** (`lookup`, `spam`, `operator`) and a **request quota**.
@@ -53,7 +55,7 @@ Full machine-readable contract: [`openapi/openapi.yaml`](openapi/openapi.yaml) �
 ## Quick start
 
 ```bash
-export NUMMEROPSLAG_API_KEY=pk_your_key_here
+export NUMMEROPSLAG_API_KEY=npk_your_key_here
 
 curl -H "X-API-Key: $NUMMEROPSLAG_API_KEY" \
   https://nummeropslag.dk/api/v1/partner/spam/33633363
@@ -71,6 +73,51 @@ Ready-to-run, dependency-free clients in [`examples/`](examples/):
 | PHP | [`examples/php_client.php`](examples/php_client.php) | `php php_client.php 33633363` |
 
 All read the key from the `NUMMEROPSLAG_API_KEY` environment variable.
+
+---
+
+## MCP server (AI agents) 🤖
+
+Give your AI agent (Claude Desktop, Claude Code, or any **Model Context Protocol** client)
+direct access to Danish phone-number data. The server in [`mcp/`](mcp/) wraps the Partner API
+as MCP tools — same official data, same privacy rules (no names of private individuals).
+
+MCP calls are metered against a **separate MCP quota** (not your REST quota); the server sends
+`X-Client: mcp` automatically.
+
+**Tools**
+
+| Tool | Description |
+|---|---|
+| `lookup_number(number)` | Full record: company (CVR), operator, spam/trust, comments |
+| `check_spam(number)` | Compact spam/scam verdict (caller-ID style) |
+| `get_operator(number)` | Operator + number type only (cheapest) |
+| `search_businesses(query, limit)` | Find Danish companies by name (CVR) |
+| `api_status()` | Your key's scopes + quota usage |
+
+**Setup**
+
+```bash
+pip install "mcp[cli]" httpx
+export NUMMEROPSLAG_API_KEY=npk_your_key_here   # https://nummeropslag.dk/api-noegle
+python mcp/server.py                            # stdio transport
+```
+
+**Add to Claude Desktop** (`claude_desktop_config.json`) **or Claude Code** (`.mcp.json`):
+
+```json
+{
+  "mcpServers": {
+    "nummeropslag": {
+      "command": "python",
+      "args": ["/absolute/path/to/nummeropslag-api/mcp/server.py"],
+      "env": { "NUMMEROPSLAG_API_KEY": "npk_your_key_here" }
+    }
+  }
+}
+```
+
+Restart your client, then ask e.g. *"Is +45 70 10 20 30 spam?"* or *"Who owns 33 63 33 63?"*.
 
 ---
 

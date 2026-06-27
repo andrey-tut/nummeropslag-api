@@ -1,13 +1,13 @@
 // Nummeropslag Partner API — minimal Node.js client (no dependencies, Node 18+ for global fetch).
 // All endpoints require an API key. Get one at https://nummeropslag.dk/api-noegle
-//   export NUMMEROPSLAG_API_KEY=pk_...
+//   export NUMMEROPSLAG_API_KEY=npk_...
 //   node node_client.js 33633363
 
 const BASE = "https://nummeropslag.dk/api/v1";
 const API_KEY = process.env.NUMMEROPSLAG_API_KEY || "";
 
 async function get(path, params) {
-  if (!API_KEY) throw new Error("Set NUMMEROPSLAG_API_KEY=pk_... (https://nummeropslag.dk/api-noegle)");
+  if (!API_KEY) throw new Error("Set NUMMEROPSLAG_API_KEY=npk_... (https://nummeropslag.dk/api-noegle)");
   const url = new URL(BASE + path);
   if (params) for (const [k, v] of Object.entries(params)) url.searchParams.set(k, v);
   const res = await fetch(url, { headers: { Accept: "application/json", "X-API-Key": API_KEY } });
