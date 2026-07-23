@@ -7,13 +7,29 @@
     "url": "https://github.com/andrey-tut/nummeropslag-api",
     "source": "github"
   },
-  "version": "1.0.0",
+  "version": "1.0.1",
   "websiteUrl": "https://nummeropslag.dk/mcp",
   "packages": [
     {
       "registryType": "mcpb",
-      "identifier": "https://github.com/andrey-tut/nummeropslag-api/releases/download/v1.0.0/nummeropslag-mcp-1.0.0.mcpb",
-      "fileSha256": "0d97bf1a7163ff1aeaeec121c91ea87cbdfa4e354952d4f64c8f5dc53f1cfe8d",
+      "identifier": "https://github.com/andrey-tut/nummeropslag-api/releases/download/v1.0.1/nummeropslag-mcp-1.0.1.mcpb",
+      "fileSha256": "07b4aecd4186e519d63f37a7667a71bbc35904074b18633c277b84f62d7c1df3",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "NUMMEROPSLAG_API_KEY",
+          "description": "Partner API key from https://nummeropslag.dk/api-noegle",
+          "isRequired": true,
+          "isSecret": true,
+          "format": "string"
+        }
+      ]
+    },
+    {
+      "registryType": "oci",
+      "identifier": "ghcr.io/andrey-tut/nummeropslag-mcp:v1.0.1",
       "transport": {
         "type": "stdio"
       },
