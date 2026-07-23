@@ -27,3 +27,5 @@ Example Agent request: `Is +45 70 10 20 30 likely to be spam?`
 API documentation: <https://andrey-tut.github.io/nummeropslag-api/>
 
 Source: <https://github.com/andrey-tut/nummeropslag-api>
+
+Contact: <info@lynbro.dk>
