@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-nummeropslag",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "n8n community node for Danish phone-number lookup, caller ID, carrier and spam signals from Nummeropslag",
   "license": "MIT",
   "homepage": "https://nummeropslag.dk/",
@@ -20,8 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/andrey-tut/nummeropslag-api.git",
-    "directory": "integrations/n8n"
+    "url": "git+https://github.com/andrey-tut/n8n-nodes-nummeropslag.git"
   },
   "publishConfig": {
     "access": "public"
