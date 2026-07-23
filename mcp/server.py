@@ -31,6 +31,7 @@ from urllib.parse import quote, urlparse
 
 import httpx
 from mcp.server.fastmcp import FastMCP
+from mcp.types import ToolAnnotations
 
 BASE = os.environ.get("NUMMEROPSLAG_BASE", "https://nummeropslag.dk/api/v1/partner").rstrip("/")
 KEY = os.environ.get("NUMMEROPSLAG_API_KEY", "")
@@ -48,6 +49,14 @@ def _seg(s: object) -> str:
 
 
 mcp = FastMCP("nummeropslag")
+
+
+READ_ONLY = ToolAnnotations(
+    readOnlyHint=True,
+    destructiveHint=False,
+    idempotentHint=True,
+    openWorldHint=True,
+)
 
 
 def _get(path: str, params: dict | None = None) -> dict:
@@ -75,7 +84,7 @@ def _get(path: str, params: dict | None = None) -> dict:
         return {"error": "bad_response", "message": r.text[:200]}
 
 
-@mcp.tool()
+@mcp.tool(title="Look up a Danish phone number", annotations=READ_ONLY)
 def lookup_number(number: str) -> dict:
     """Look up a Danish phone number and return the full record: the registered company
     (from the official CVR register), the telecom operator, the number type, a community
@@ -84,7 +93,7 @@ def lookup_number(number: str) -> dict:
     return _get(f"/lookup/{_seg(number)}")
 
 
-@mcp.tool()
+@mcp.tool(title="Check a Danish number for spam", annotations=READ_ONLY)
 def check_spam(number: str) -> dict:
     """Quick spam/scam check for a Danish phone number. Returns a compact verdict:
     spam level, score, trust rating and how many users reported it. Use this to decide
@@ -92,21 +101,21 @@ def check_spam(number: str) -> dict:
     return _get(f"/spam/{_seg(number)}")
 
 
-@mcp.tool()
+@mcp.tool(title="Get a Danish number's operator", annotations=READ_ONLY)
 def get_operator(number: str) -> dict:
     """Return the telecom operator and number type (mobile / landline / service) for a
     Danish phone number, from the official Danish number plan. Lightweight, no company data."""
     return _get(f"/operator/{_seg(number)}")
 
 
-@mcp.tool()
+@mcp.tool(title="Search Danish businesses", annotations=READ_ONLY)
 def search_businesses(query: str, limit: int = 20) -> dict:
     """Search Danish companies by name (from the CVR register). Returns matching
     businesses. Useful to find a company's phone number or details by name."""
     return _get("/search", {"q": query, "limit": max(1, min(50, limit))})
 
 
-@mcp.tool()
+@mcp.tool(title="Check Nummeropslag API status", annotations=READ_ONLY)
 def api_status() -> dict:
     """Return the status of the configured API key: allowed scopes, daily quota and
     how many calls have been used today."""

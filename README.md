@@ -10,6 +10,8 @@
 
 Public **Partner API** + **MCP server** for Danish phone-number lookup, caller-ID and spam/trust signals.
 
+<!-- mcp-name: io.github.andrey-tut/nummeropslag -->
+
 Identify who is calling from a Danish number: company from the official **CVR** register,
 **telecom operator**, number type, and a **spam/trust verdict** based on anonymous user
 reports. Powered by official open data — not scraping. Use it from any HTTP client, or plug the
@@ -82,6 +84,15 @@ Give your AI agent (Claude Desktop, Claude Code, or any **Model Context Protocol
 direct access to Danish phone-number data. The server in [`mcp/`](mcp/) wraps the Partner API
 as MCP tools — same official data, same privacy rules (no names of private individuals).
 
+### One-click desktop installation
+
+Download the latest `nummeropslag-mcp-*.mcpb` bundle from
+[GitHub Releases](https://github.com/andrey-tut/nummeropslag-api/releases), open it with a
+compatible desktop client, and enter your Nummeropslag API key when prompted. The bundle uses
+the managed `uv` runtime, so users do not need to install Python dependencies manually.
+
+The canonical registry identifier is `io.github.andrey-tut/nummeropslag`.
+
 MCP calls are metered against a **separate MCP quota** (not your REST quota); the server sends
 `X-Client: mcp` automatically.
 
@@ -137,6 +148,13 @@ Common codes: `unauthorized` (missing/invalid key), `forbidden` (scope not allow
 - Core data: official **CVR** (companies + production units) and the Danish **number plan** (SDFI, CC0).
 - Spam verdicts use **k-anonymity** — a public "spam" label requires several independent reports.
 - **Names of private individuals are never exposed.** Contacts are never uploaded (GDPR-compliant).
+
+## Privacy Policy
+
+The MCP server sends only the phone number or business query requested by the user to the
+first-party Nummeropslag API. It does not read conversations, files, contacts, or call logs.
+See the full [Nummeropslag privacy policy](https://nummeropslag.dk/privatlivspolitik) for data
+collection, use, retention, sharing, and contact information.
 
 ## License
 
