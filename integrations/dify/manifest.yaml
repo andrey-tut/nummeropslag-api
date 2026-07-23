@@ -1,0 +1,29 @@
+version: 0.0.1
+type: plugin
+author: andrey-tut
+name: nummeropslag
+label:
+  en_US: Nummeropslag
+description:
+  en_US: Privacy-first Danish phone lookup, caller ID, operator and spam signals.
+icon: icon.svg
+icon_dark: icon-dark.svg
+resource:
+  memory: 134217728
+  permission: {}
+plugins:
+  tools:
+    - provider/nummeropslag.yaml
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+  minimum_dify_version: "1.6.0"
+created_at: 2026-07-23T19:10:00+02:00
+privacy: PRIVACY.md
+verified: false

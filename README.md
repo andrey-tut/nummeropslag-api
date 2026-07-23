@@ -78,6 +78,23 @@ All read the key from the `NUMMEROPSLAG_API_KEY` environment variable.
 
 ---
 
+## Workflow integrations
+
+Use Nummeropslag as native nodes and tools in popular automation and AI workflow
+builders:
+
+| Platform | Integration | Location |
+|---|---|---|
+| n8n | Community node with five operations and AI Tool support | [`integrations/n8n`](integrations/n8n) |
+| Dify | Installable tool plugin for Workflows, Chatflows and Agents | [`integrations/dify`](integrations/dify) |
+| Langflow | Custom component with Tool Mode support | [`integrations/langflow`](integrations/langflow) |
+| Flowise | Ready-to-paste Custom Tool functions and schemas | [`integrations/flowise`](integrations/flowise) |
+
+The integrations store the API key in each platform's credential/secret system
+and send queries only to `https://nummeropslag.dk`.
+
+---
+
 ## MCP server (AI agents) 🤖
 
 Give your AI agent (Claude Desktop, Claude Code, or any **Model Context Protocol** client)

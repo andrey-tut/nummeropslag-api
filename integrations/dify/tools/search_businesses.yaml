@@ -1,0 +1,34 @@
+identity:
+  name: search_businesses
+  author: andrey-tut
+  label:
+    en_US: Search Danish Businesses
+description:
+  human:
+    en_US: Search Danish companies by name using official CVR data.
+  llm: Use this tool to find registered Danish businesses and their available public details by company name.
+parameters:
+  - name: query
+    type: string
+    required: true
+    label:
+      en_US: Business name
+    human_description:
+      en_US: At least two characters from the company name.
+    llm_description: The Danish business name to search for.
+    form: llm
+  - name: limit
+    type: number
+    required: false
+    default: 20
+    min: 1
+    max: 50
+    label:
+      en_US: Maximum results
+    human_description:
+      en_US: Return between 1 and 50 matching businesses.
+    llm_description: Maximum number of results to return, from 1 to 50.
+    form: form
+extra:
+  python:
+    source: tools/search_businesses.py

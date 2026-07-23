@@ -1,0 +1,22 @@
+identity:
+  name: get_operator
+  author: andrey-tut
+  label:
+    en_US: Get Danish Number Operator
+description:
+  human:
+    en_US: Get the telecom operator and number type from the official Danish number plan.
+  llm: Use this tool when only the carrier and number type of a Danish phone number are needed.
+parameters:
+  - name: number
+    type: string
+    required: true
+    label:
+      en_US: Danish phone number
+    human_description:
+      en_US: An 8-digit Danish number or a number with the +45 country code.
+    llm_description: The Danish phone number whose operator and type should be returned.
+    form: llm
+extra:
+  python:
+    source: tools/get_operator.py

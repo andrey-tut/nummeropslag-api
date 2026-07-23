@@ -1,0 +1,31 @@
+identity:
+  author: andrey-tut
+  name: nummeropslag
+  label:
+    en_US: Nummeropslag
+  description:
+    en_US: Danish caller ID and business lookup using official CVR and number-plan data.
+  icon: icon.svg
+  tags:
+    - search
+    - utilities
+credentials_for_provider:
+  api_key:
+    type: secret-input
+    required: true
+    label:
+      en_US: Nummeropslag API Key
+    placeholder:
+      en_US: npk_...
+    help:
+      en_US: Get an API key from your Nummeropslag account.
+    url: https://nummeropslag.dk/api-noegle
+tools:
+  - tools/lookup_number.yaml
+  - tools/check_spam.yaml
+  - tools/get_operator.yaml
+  - tools/search_businesses.yaml
+  - tools/api_status.yaml
+extra:
+  python:
+    source: provider/nummeropslag.py

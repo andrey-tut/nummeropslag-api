@@ -1,0 +1,22 @@
+identity:
+  name: lookup_number
+  author: andrey-tut
+  label:
+    en_US: Look Up Danish Phone Number
+description:
+  human:
+    en_US: Get company, operator, number type, spam/trust and recent comments for a Danish number.
+  llm: Use this tool to identify a Danish caller and retrieve the complete available record.
+parameters:
+  - name: number
+    type: string
+    required: true
+    label:
+      en_US: Danish phone number
+    human_description:
+      en_US: An 8-digit Danish number or a number with the +45 country code.
+    llm_description: The Danish phone number to look up. Spaces, separators and +45 are accepted.
+    form: llm
+extra:
+  python:
+    source: tools/lookup_number.py

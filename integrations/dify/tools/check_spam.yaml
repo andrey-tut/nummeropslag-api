@@ -1,0 +1,22 @@
+identity:
+  name: check_spam
+  author: andrey-tut
+  label:
+    en_US: Check Danish Number for Spam
+description:
+  human:
+    en_US: Get a compact spam, scam and trust verdict for a Danish phone number.
+  llm: Use this tool to determine whether a Danish incoming caller is likely spam, telemarketing or a scam.
+parameters:
+  - name: number
+    type: string
+    required: true
+    label:
+      en_US: Danish phone number
+    human_description:
+      en_US: An 8-digit Danish number or a number with the +45 country code.
+    llm_description: The Danish phone number to evaluate for spam and trust signals.
+    form: llm
+extra:
+  python:
+    source: tools/check_spam.py
