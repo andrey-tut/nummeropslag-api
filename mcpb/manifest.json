@@ -1,0 +1,92 @@
+{
+  "manifest_version": "0.4",
+  "name": "nummeropslag",
+  "display_name": "Nummeropslag",
+  "version": "1.0.0",
+  "description": "Privacy-first Danish caller ID, company lookup, operator data, and spam signals.",
+  "long_description": "Look up Danish phone numbers using official CVR company data, the Danish number plan, and privacy-preserving community spam signals. Nummeropslag does not expose names of private individuals. An API key is required.",
+  "author": {
+    "name": "LynBro ApS",
+    "url": "https://nummeropslag.dk"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/andrey-tut/nummeropslag-api.git"
+  },
+  "homepage": "https://nummeropslag.dk",
+  "documentation": "https://nummeropslag.dk/mcp",
+  "support": "https://github.com/andrey-tut/nummeropslag-api/issues",
+  "icon": "icon.png",
+  "server": {
+    "type": "uv",
+    "entry_point": "server.py",
+    "mcp_config": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--directory",
+        "${__dirname}",
+        "server.py"
+      ],
+      "env": {
+        "NUMMEROPSLAG_API_KEY": "${user_config.api_key}"
+      }
+    }
+  },
+  "tools": [
+    {
+      "name": "lookup_number",
+      "description": "Look up a Danish phone number and return company, operator, number type, and spam signals."
+    },
+    {
+      "name": "check_spam",
+      "description": "Return a compact spam or scam verdict for a Danish phone number."
+    },
+    {
+      "name": "get_operator",
+      "description": "Return the telecom operator and number type for a Danish phone number."
+    },
+    {
+      "name": "search_businesses",
+      "description": "Search CVR-registered Danish businesses by name."
+    },
+    {
+      "name": "api_status",
+      "description": "Show the configured API key's scopes and quota usage."
+    }
+  ],
+  "tools_generated": false,
+  "keywords": [
+    "denmark",
+    "caller-id",
+    "phone",
+    "spam",
+    "fraud",
+    "osint",
+    "cvr",
+    "privacy"
+  ],
+  "license": "MIT",
+  "privacy_policies": [
+    "https://nummeropslag.dk/privatlivspolitik"
+  ],
+  "compatibility": {
+    "platforms": [
+      "darwin",
+      "linux",
+      "win32"
+    ],
+    "runtimes": {
+      "python": ">=3.10"
+    }
+  },
+  "user_config": {
+    "api_key": {
+      "type": "string",
+      "title": "Nummeropslag API key",
+      "description": "Create an API key at https://nummeropslag.dk/api-noegle",
+      "sensitive": true,
+      "required": true
+    }
+  }
+}
