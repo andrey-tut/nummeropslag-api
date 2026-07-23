@@ -93,6 +93,16 @@ the managed `uv` runtime, so users do not need to install Python dependencies ma
 
 The canonical registry identifier is `io.github.andrey-tut/nummeropslag`.
 
+### Docker
+
+The same stdio server is published as a public OCI image:
+
+```bash
+docker run --rm -i \
+  -e NUMMEROPSLAG_API_KEY=npk_your_key_here \
+  ghcr.io/andrey-tut/nummeropslag-mcp:latest
+```
+
 MCP calls are metered against a **separate MCP quota** (not your REST quota); the server sends
 `X-Client: mcp` automatically.
 

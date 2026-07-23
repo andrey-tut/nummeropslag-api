@@ -2,7 +2,7 @@
   "manifest_version": "0.4",
   "name": "nummeropslag",
   "display_name": "Nummeropslag",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Privacy-first Danish caller ID, company lookup, operator data, and spam signals.",
   "long_description": "Look up Danish phone numbers using official CVR company data, the Danish number plan, and privacy-preserving community spam signals. Nummeropslag does not expose names of private individuals. An API key is required.",
   "author": {
