@@ -133,12 +133,12 @@ MCP calls are metered against a **separate MCP quota** (not your REST quota); th
 | `search_businesses(query, limit)` | Find Danish companies by name (CVR) |
 | `api_status()` | Your key's scopes + quota usage |
 
-**Setup**
+**Setup — via PyPI (recommended)**
 
 ```bash
-pip install "mcp[cli]" httpx
+pip install nummeropslag-mcp                    # or: uvx nummeropslag-mcp
 export NUMMEROPSLAG_API_KEY=npk_your_key_here   # https://nummeropslag.dk/api-noegle
-python mcp/server.py                            # stdio transport
+nummeropslag-mcp                                # stdio transport
 ```
 
 **Add to Claude Desktop** (`claude_desktop_config.json`) **or Claude Code** (`.mcp.json`):
@@ -147,13 +147,23 @@ python mcp/server.py                            # stdio transport
 {
   "mcpServers": {
     "nummeropslag": {
-      "command": "python",
-      "args": ["/absolute/path/to/nummeropslag-api/mcp/server.py"],
+      "command": "nummeropslag-mcp",
       "env": { "NUMMEROPSLAG_API_KEY": "npk_your_key_here" }
     }
   }
 }
 ```
+
+<details><summary>Run from source instead (no PyPI)</summary>
+
+```bash
+pip install "mcp[cli]" httpx
+python mcp/server.py
+```
+
+…and use `"command": "python", "args": ["/absolute/path/to/nummeropslag-api/mcp/server.py"]` in the config above.
+
+</details>
 
 Restart your client, then ask e.g. *"Is +45 70 10 20 30 spam?"* or *"Who owns 33 63 33 63?"*.
 

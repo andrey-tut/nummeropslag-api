@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nummeropslag-mcp"
+version = "1.0.1"
+description = "MCP server for Danish phone-number lookup, caller ID and spam signals — official CVR + number-register data (nummeropslag.dk)"
+readme = "README-pypi.md"
+license = { text = "MIT" }
+authors = [{ name = "Nummeropslag", email = "info@lynbro.dk" }]
+requires-python = ">=3.10"
+dependencies = ["mcp[cli]>=1.2,<2", "httpx>=0.27,<1"]
+keywords = ["mcp", "model-context-protocol", "caller-id", "phone-lookup", "denmark", "cvr", "spam", "nummeropslag"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Topic :: Communications :: Telephony",
+]
+
+[project.urls]
+Homepage = "https://nummeropslag.dk"
+Repository = "https://github.com/andrey-tut/nummeropslag-api"
+Documentation = "https://andrey-tut.github.io/nummeropslag-api/"
+"Get an API key" = "https://nummeropslag.dk/api-noegle"
+
+[project.scripts]
+nummeropslag-mcp = "nummeropslag_mcp:main"
+
+[tool.setuptools]
+packages = ["nummeropslag_mcp"]

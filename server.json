@@ -42,6 +42,24 @@
           "format": "string"
         }
       ]
+    },
+    {
+      "registryType": "pypi",
+      "registryBaseUrl": "https://pypi.org",
+      "identifier": "nummeropslag-mcp",
+      "version": "1.0.1",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "NUMMEROPSLAG_API_KEY",
+          "description": "Partner API key from https://nummeropslag.dk/api-noegle",
+          "isRequired": true,
+          "isSecret": true,
+          "format": "string"
+        }
+      ]
     }
   ]
 }

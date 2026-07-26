@@ -7,3 +7,10 @@ __pycache__/
 *.pyc
 *.difypkg
 *.tgz
+
+# build artefacts
+mcp/dist/
+mcp/build/
+mcp/.testenv/
+mcp/*.egg-info/
+mcp/nummeropslag_mcp/__pycache__/
