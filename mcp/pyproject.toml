@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "nummeropslag-mcp"
-version = "1.0.1"
+version = "1.0.2"
 description = "MCP server for Danish phone-number lookup, caller ID and spam signals — official CVR + number-register data (nummeropslag.dk)"
 readme = "README-pypi.md"
 license = { text = "MIT" }

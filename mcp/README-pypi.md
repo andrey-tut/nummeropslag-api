@@ -1,5 +1,7 @@
 # nummeropslag-mcp
 
+mcp-name: io.github.andrey-tut/nummeropslag
+
 MCP (Model Context Protocol) server that gives AI agents — Claude Desktop, Claude Code,
 or any MCP client — access to **Danish phone-number data** from
 [nummeropslag.dk](https://nummeropslag.dk): company lookup from the official **CVR**

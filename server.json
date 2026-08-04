@@ -7,7 +7,7 @@
     "url": "https://github.com/andrey-tut/nummeropslag-api",
     "source": "github"
   },
-  "version": "1.0.1",
+  "version": "1.0.2",
   "websiteUrl": "https://nummeropslag.dk/mcp",
   "packages": [
     {
@@ -47,7 +47,7 @@
       "registryType": "pypi",
       "registryBaseUrl": "https://pypi.org",
       "identifier": "nummeropslag-mcp",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "transport": {
         "type": "stdio"
       },
