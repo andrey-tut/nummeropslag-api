@@ -2,26 +2,20 @@ openapi: 3.1.0
 info:
   title: Nummeropslag Partner API
   version: 0.4.9
-  description: 'Public Partner API for Danish phone-number lookup, caller-ID and spam/trust
-    signals.
+  description: 'Public Partner API for Danish phone-number lookup, caller-ID and spam/trust signals.
 
 
-    All data endpoints require an API key sent in the `X-API-Key` header. Get a key
-    at https://nummeropslag.dk/api-noegle — each key has a plan, scopes (lookup /
-    spam / operator) and a request quota.
+    All data endpoints require an API key sent in the `X-API-Key` header. Get a key at https://nummeropslag.dk/api-noegle — each key has a plan, scopes (lookup / spam / operator / search) and a request quota.
 
 
-    Data core: official CVR (companies + production units) and the Danish number plan
-    (SDFI, CC0). Privacy: names of private individuals are never exposed; contacts
-    are never uploaded (GDPR).'
+    Data core: official CVR (companies + production units) and the Danish number plan (SDFI, CC0). Privacy: names of private individuals are never exposed; contacts are never uploaded (GDPR).'
 paths:
   /api/v1/partner/lookup/{e164}:
     get:
       tags:
       - partner-api
       summary: 'Full lookup: company (CVR), operator, spam/trust, comments'
-      description: 'Full record for a Danish number: registered company (CVR), telecom
-        operator,
+      description: 'Full record for a Danish number: registered company (CVR), telecom operator,
 
         spam/trust rating and recent anonymous comments.'
       operationId: partner_lookup_api_v1_partner_lookup__e164__get
@@ -62,8 +56,7 @@ paths:
       summary: Compact spam/trust verdict only
       description: 'Lightweight spam/trust verdict — ideal for caller-ID / call-blocking.
 
-        DB-only (live=False) → швидко: спам-вердикт із краудсорсу+БД, без блокуючого
-        live-CVR.'
+        DB-only (live=False) → швидко: спам-вердикт із краудсорсу+БД, без блокуючого live-CVR.'
       operationId: partner_spam_api_v1_partner_spam__e164__get
       parameters:
       - name: e164
@@ -99,8 +92,7 @@ paths:
       tags:
       - partner-api
       summary: Compact operator + number type
-      description: Telecom operator and number type from the Danish number plan (no
-        CVR/Google).
+      description: Telecom operator and number type from the Danish number plan (no CVR/Google).
       operationId: partner_operator_api_v1_partner_operator__e164__get
       parameters:
       - name: e164
@@ -283,6 +275,10 @@ components:
       title: ClaimOut
     CommentOut:
       properties:
+        id:
+          type: integer
+          title: Id
+          default: 0
         category:
           type: string
           title: Category
@@ -292,6 +288,10 @@ components:
         date:
           type: string
           title: Date
+          default: ''
+        iso:
+          type: string
+          title: Iso
           default: ''
         source:
           type: string
@@ -349,6 +349,18 @@ components:
           - type: string
           - type: 'null'
           title: Parent Cvr
+        startdate:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Startdate
+        enddate:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Enddate
       type: object
       required:
       - cvr
@@ -391,10 +403,21 @@ components:
           type: boolean
           title: Closed
           default: false
+        startdate:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Startdate
+        enddate:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Enddate
       type: object
       title: FirmOut
-      description: Унікальна фірма (CVR) + її відділення (P-enheder). P-enhed = офіс/філія,
-        не окрема фірма.
+      description: Унікальна фірма (CVR) + її відділення (P-enheder). P-enhed = офіс/філія, не окрема фірма.
     GoogleOut:
       properties:
         name:
@@ -425,6 +448,16 @@ components:
           - type: string
           - type: 'null'
           title: Website
+        place_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Place Id
+        cid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cid
         maps_uri:
           anyOf:
           - type: string
@@ -443,10 +476,14 @@ components:
           default: []
       type: object
       title: GoogleOut
-      description: Верифіковані бізнеси Google за номером (може бути кілька). Атрибуція
-        Google обовʼязкова в UI.
+      description: Верифіковані бізнеси Google за номером (може бути кілька). Атрибуція Google обовʼязкова в UI.
     GooglePlaceOut:
       properties:
+        place_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Place Id
         name:
           anyOf:
           - type: string
@@ -500,10 +537,72 @@ components:
           type: string
           title: Tone
           default: neutral
+        key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Key
       type: object
       required:
       - text
       title: LabelOut
+    LineOut:
+      properties:
+        kind:
+          type: string
+          title: Kind
+          default: unknown
+        label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Label
+        cost:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cost
+        assigned:
+          type: boolean
+          title: Assigned
+          default: true
+        block:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Block
+        region:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Region
+        region_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Region Label
+        region_confidence:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Region Confidence
+        city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: City
+        city_confidence:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: City Confidence
+      type: object
+      title: LineOut
+      description: 'Тип лінії з ОФІЦІЙНОГО номерного плану (тип ресурсу серії), а не з евристики за
+
+        двома першими цифрами. Дає те, чого не давав `type`: VoIP/IP-телефонію, національні
+
+        70-номери, безкоштовні 80, дорогі 90 та M2M/IoT.'
     NumberOut:
       properties:
         e164:
@@ -519,6 +618,10 @@ components:
         operator:
           anyOf:
           - $ref: '#/components/schemas/OperatorOut'
+          - type: 'null'
+        line:
+          anyOf:
+          - $ref: '#/components/schemas/LineOut'
           - type: 'null'
         companies:
           items:
@@ -553,6 +656,10 @@ components:
           - type: string
           - type: 'null'
           title: Placeholder Reason
+        shared:
+          type: boolean
+          title: Shared
+          default: false
         spam:
           $ref: '#/components/schemas/SpamOut'
           default:
@@ -632,6 +739,24 @@ components:
           type: integer
           title: Verdict N
           default: 0
+        web_enrich:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Web Enrich
+        assessment:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Assessment
+        ownership:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Ownership
       type: object
       required:
       - e164
@@ -659,8 +784,46 @@ components:
           - type: string
           - type: 'null'
           title: Series
+        role:
+          type: string
+          title: Role
+          default: range_holder
+        kind:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Kind
+        kind_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Kind Label
+        shared_series:
+          type: boolean
+          title: Shared Series
+          default: false
+        holders_total:
+          type: integer
+          title: Holders Total
+          default: 1
+        issued:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Issued
+        portable:
+          type: boolean
+          title: Portable
+          default: true
       type: object
       title: OperatorOut
+      description: 'ТРИМАЧ НОМЕРНОЇ СЕРІЇ з офіційного Nummerregistret — не обовʼязково теперішній
+
+        оператор абонента: після перенесення номера (MNP) абонент може бути в іншого, а це
+
+        видно лише в HLR операторів (SS7), куди відкритого доступу нема. Тому `role` завжди
+
+        `range_holder`, а клієнти мусять формулювати так само («nummerserie tildelt …»).'
     ReportIn:
       properties:
         e164:
@@ -813,3 +976,5 @@ components:
 servers:
 - url: https://nummeropslag.dk
   description: Production
+security:
+- ApiKeyAuth: []

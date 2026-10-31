@@ -31,7 +31,7 @@ All endpoints require an API key, sent in the `X-API-Key` header:
 X-API-Key: npk_your_key_here
 ```
 
-Each key has a **plan**, a set of **scopes** (`lookup`, `spam`, `operator`) and a **request quota**.
+Each key has a **plan**, a set of **scopes** (`lookup`, `spam`, `operator`, `search`) and a **request quota**.
 Check your key status any time via `GET /api/v1/partner/me`.
 
 Base URL: `https://nummeropslag.dk/api/v1`
@@ -45,7 +45,7 @@ Base URL: `https://nummeropslag.dk/api/v1`
 | GET | `/partner/lookup/{e164}` | `lookup` | Full lookup — operator, CVR companies, spam/trust signals |
 | GET | `/partner/spam/{e164}` | `spam` | Compact spam/trust verdict only |
 | GET | `/partner/operator/{e164}` | `operator` | Telecom operator + number type |
-| GET | `/partner/search?q=` | `lookup` | Search companies by name (CVR) |
+| GET | `/partner/search?q=` | `search` | Search companies by name (CVR) |
 | GET | `/partner/me` | — | Your key status: plan, scopes, quota/usage |
 
 `{e164}` accepts an 8-digit Danish number or full E.164 — e.g. `33633363` or `+4533633363`.

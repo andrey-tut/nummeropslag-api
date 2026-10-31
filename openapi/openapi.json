@@ -3,7 +3,7 @@
   "info": {
     "title": "Nummeropslag Partner API",
     "version": "0.4.9",
-    "description": "Public Partner API for Danish phone-number lookup, caller-ID and spam/trust signals.\n\nAll data endpoints require an API key sent in the `X-API-Key` header. Get a key at https://nummeropslag.dk/api-noegle — each key has a plan, scopes (lookup / spam / operator) and a request quota.\n\nData core: official CVR (companies + production units) and the Danish number plan (SDFI, CC0). Privacy: names of private individuals are never exposed; contacts are never uploaded (GDPR)."
+    "description": "Public Partner API for Danish phone-number lookup, caller-ID and spam/trust signals.\n\nAll data endpoints require an API key sent in the `X-API-Key` header. Get a key at https://nummeropslag.dk/api-noegle — each key has a plan, scopes (lookup / spam / operator / search) and a request quota.\n\nData core: official CVR (companies + production units) and the Danish number plan (SDFI, CC0). Privacy: names of private individuals are never exposed; contacts are never uploaded (GDPR)."
   },
   "paths": {
     "/api/v1/partner/lookup/{e164}": {
@@ -463,6 +463,11 @@
       },
       "CommentOut": {
         "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id",
+            "default": 0
+          },
           "category": {
             "type": "string",
             "title": "Category"
@@ -474,6 +479,11 @@
           "date": {
             "type": "string",
             "title": "Date",
+            "default": ""
+          },
+          "iso": {
+            "type": "string",
+            "title": "Iso",
             "default": ""
           },
           "source": {
@@ -580,6 +590,30 @@
               }
             ],
             "title": "Parent Cvr"
+          },
+          "startdate": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Startdate"
+          },
+          "enddate": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Enddate"
           }
         },
         "type": "object",
@@ -658,6 +692,30 @@
             "type": "boolean",
             "title": "Closed",
             "default": false
+          },
+          "startdate": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Startdate"
+          },
+          "enddate": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Enddate"
           }
         },
         "type": "object",
@@ -720,6 +778,28 @@
             ],
             "title": "Website"
           },
+          "place_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Place Id"
+          },
+          "cid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cid"
+          },
           "maps_uri": {
             "anyOf": [
               {
@@ -757,6 +837,17 @@
       },
       "GooglePlaceOut": {
         "properties": {
+          "place_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Place Id"
+          },
           "name": {
             "anyOf": [
               {
@@ -849,6 +940,17 @@
             "type": "string",
             "title": "Tone",
             "default": "neutral"
+          },
+          "key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Key"
           }
         },
         "type": "object",
@@ -856,6 +958,111 @@
           "text"
         ],
         "title": "LabelOut"
+      },
+      "LineOut": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "title": "Kind",
+            "default": "unknown"
+          },
+          "label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Label"
+          },
+          "cost": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cost"
+          },
+          "assigned": {
+            "type": "boolean",
+            "title": "Assigned",
+            "default": true
+          },
+          "block": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Block"
+          },
+          "region": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Region"
+          },
+          "region_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Region Label"
+          },
+          "region_confidence": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Region Confidence"
+          },
+          "city": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "City"
+          },
+          "city_confidence": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "City Confidence"
+          }
+        },
+        "type": "object",
+        "title": "LineOut",
+        "description": "Тип лінії з ОФІЦІЙНОГО номерного плану (тип ресурсу серії), а не з евристики за\nдвома першими цифрами. Дає те, чого не давав `type`: VoIP/IP-телефонію, національні\n70-номери, безкоштовні 80, дорогі 90 та M2M/IoT."
       },
       "NumberOut": {
         "properties": {
@@ -876,6 +1083,16 @@
             "anyOf": [
               {
                 "$ref": "#/components/schemas/OperatorOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "line": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/LineOut"
               },
               {
                 "type": "null"
@@ -928,6 +1145,11 @@
               }
             ],
             "title": "Placeholder Reason"
+          },
+          "shared": {
+            "type": "boolean",
+            "title": "Shared",
+            "default": false
           },
           "spam": {
             "$ref": "#/components/schemas/SpamOut",
@@ -1051,6 +1273,42 @@
             "type": "integer",
             "title": "Verdict N",
             "default": 0
+          },
+          "web_enrich": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Web Enrich"
+          },
+          "assessment": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Assessment"
+          },
+          "ownership": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ownership"
           }
         },
         "type": "object",
@@ -1105,10 +1363,64 @@
               }
             ],
             "title": "Series"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role",
+            "default": "range_holder"
+          },
+          "kind": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Kind"
+          },
+          "kind_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Kind Label"
+          },
+          "shared_series": {
+            "type": "boolean",
+            "title": "Shared Series",
+            "default": false
+          },
+          "holders_total": {
+            "type": "integer",
+            "title": "Holders Total",
+            "default": 1
+          },
+          "issued": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Issued"
+          },
+          "portable": {
+            "type": "boolean",
+            "title": "Portable",
+            "default": true
           }
         },
         "type": "object",
-        "title": "OperatorOut"
+        "title": "OperatorOut",
+        "description": "ТРИМАЧ НОМЕРНОЇ СЕРІЇ з офіційного Nummerregistret — не обовʼязково теперішній\nоператор абонента: після перенесення номера (MNP) абонент може бути в іншого, а це\nвидно лише в HLR операторів (SS7), куди відкритого доступу нема. Тому `role` завжди\n`range_holder`, а клієнти мусять формулювати так само («nummerserie tildelt …»)."
       },
       "ReportIn": {
         "properties": {
@@ -1334,6 +1646,11 @@
     {
       "url": "https://nummeropslag.dk",
       "description": "Production"
+    }
+  ],
+  "security": [
+    {
+      "ApiKeyAuth": []
     }
   ]
 }
