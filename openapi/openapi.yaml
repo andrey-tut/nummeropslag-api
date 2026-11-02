@@ -757,6 +757,11 @@ components:
             type: object
           - type: 'null'
           title: Ownership
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
       type: object
       required:
       - e164
